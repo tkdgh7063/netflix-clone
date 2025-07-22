@@ -122,9 +122,9 @@ function Header() {
   const inputAnimation = useAnimation();
   const svgAnimation = useAnimation();
 
-  const { scrollYProgress } = useScroll();
-  useMotionValueEvent(scrollYProgress, "change", (latest) => {
-    if (latest > 0.15) {
+  const { scrollY } = useScroll();
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    if (latest > 255) {
       navAnimation.start("scroll");
     } else {
       navAnimation.start("top");
