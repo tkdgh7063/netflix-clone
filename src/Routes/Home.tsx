@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { AnimatePresence, motion, Variants } from "motion/react";
 import { useQuery } from "react-query";
 import styled from "styled-components";
@@ -60,11 +60,29 @@ const Movie = styled(motion.div)<{ $bgPhoto: string }>`
   color: white;
   font-size: 18px;
   font-weight: 400;
-  padding: 5px 8px;
   background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0)),
     url(${(props) => props.$bgPhoto});
   background-position: center center;
   background-size: cover;
+  &:first-child {
+    transform-origin: center left;
+  }
+  &:last-child {
+    transform-origin: center right;
+  }
+`;
+
+const MovieInfo = styled(motion.div)`
+  width: 100%;
+  padding: 10px;
+  background-color: ${(props) => props.theme.black.lighter};
+  opacity: 0;
+  position: absolute;
+  bottom: 0;
+  h4 {
+    text-align: center;
+    font-size: 18px;
+  }
 `;
 
 // const rowVariants: Variants = {
@@ -72,6 +90,22 @@ const Movie = styled(motion.div)<{ $bgPhoto: string }>`
 //   visible: { x: 0 },
 //   exit: { x: -window.innerWidth - 5 },
 // };
+
+const MovieVariants: Variants = {
+  normal: { scale: 1, transition: { type: "tween" } },
+  hover: {
+    scale: 1.2,
+    y: -50,
+    transition: { type: "tween", delay: 0.5, duration: 0.3 },
+  },
+};
+
+const MovieInfoVariants: Variants = {
+  hover: {
+    opacity: 1,
+    transition: { type: "tween", delay: 0.8, duration: 0.2 },
+  },
+};
 
 const offset = 6;
 
@@ -122,9 +156,14 @@ function Home() {
                   .slice(offset * index, offset * (index + 1))
                   .map((movie) => (
                     <Movie
-                      $bgPhoto={makeImagePath(movie.backdrop_path)}
-                      key={movie.id}>
-                      {movie.title}
+                      key={movie.id}
+                      variants={MovieVariants}
+                      whileHover="hover"
+                      initial="normal"
+                      $bgPhoto={makeImagePath(movie.backdrop_path)}>
+                      <MovieInfo variants={MovieInfoVariants}>
+                        <h4>{movie.title}</h4>
+                      </MovieInfo>
                     </Movie>
                   ))}
               </Row>
