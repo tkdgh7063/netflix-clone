@@ -8,8 +8,9 @@ import {
   useTransform,
   Variants,
 } from "motion/react";
-import { Link, useRouteMatch } from "react-router-dom";
+import { Link, useHistory, useRouteMatch } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
+import { useForm } from "react-hook-form";
 
 const Nav = styled(motion.nav)`
   display: flex;
@@ -69,7 +70,7 @@ const Circle = styled(motion.span)`
   margin: 0 auto;
 `;
 
-const Search = styled.span`
+const Search = styled.form`
   color: white;
   display: flex;
   align-items: center;
@@ -112,12 +113,22 @@ const navVariants: Variants = {
   scroll: { backgroundColor: "rgba(0, 0, 0, 1)" },
 };
 
+interface Form {
+  keyword: string;
+}
+
 function Header() {
   const [searchOpen, setSearchOpen] = useState(false);
   const homeMatch = useRouteMatch("/");
   const tvMatch = useRouteMatch("/tv");
 
-  const inputRef = useRef<HTMLInputElement>(null);
+  const history = useHistory();
+  const { register, handleSubmit, setFocus } = useForm<Form>();
+  const onValid = (data: Form) => {
+    history.push(`/search?keyword=${data.keyword}`);
+  };
+
+  const inputRef = useRef<HTMLInputElement | null>(null);
   const navAnimation = useAnimation();
   const inputAnimation = useAnimation();
   const svgAnimation = useAnimation();
@@ -197,12 +208,15 @@ function Header() {
       </Col>
 
       <Col>
-        <Search>
+        <Search onSubmit={handleSubmit(onValid)}>
           <motion.svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 512 512"
             fill="currentColor"
-            onClick={toggleSearch}
+            onClick={() => {
+              toggleSearch();
+              setFocus("keyword");
+            }}
             animate={svgAnimation}
             transition={{ ease: "linear", duration: 0.2 }}>
             <path
@@ -215,7 +229,11 @@ function Header() {
           <AnimatePresence>
             {searchOpen && (
               <Input
-                ref={inputRef}
+                {...register("keyword", { required: true, minLength: 2 })}
+                ref={(e: HTMLInputElement) => {
+                  register("keyword").ref(e);
+                  inputRef.current = e;
+                }}
                 onBlur={() => {
                   setSearchOpen(false);
                   if (inputRef.current) inputRef.current.value = "";
