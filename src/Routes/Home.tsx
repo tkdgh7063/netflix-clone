@@ -60,8 +60,7 @@ const Movie = styled(motion.div)<{ $bgPhoto: string }>`
   color: white;
   font-size: 18px;
   font-weight: 400;
-  background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0)),
-    url(${(props) => props.$bgPhoto});
+  background-image: url(${(props) => props.$bgPhoto});
   background-position: center center;
   background-size: cover;
   &:first-child {
@@ -70,6 +69,19 @@ const Movie = styled(motion.div)<{ $bgPhoto: string }>`
   &:last-child {
     transform-origin: center right;
   }
+`;
+
+const MovieOverlay = styled(motion.div)`
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0));
+  opacity: 0;
+  pointer-events: none;
+  z-index: 1;
+  border-radius: 5px;
 `;
 
 const MovieInfo = styled(motion.div)`
@@ -100,10 +112,18 @@ const MovieVariants: Variants = {
   },
 };
 
+const overlayVariants: Variants = {
+  normal: { opacity: 0 },
+  hover: {
+    opacity: 1,
+    transition: { type: "tween", delay: 0.5, duration: 0.5 },
+  },
+};
+
 const MovieInfoVariants: Variants = {
   hover: {
     opacity: 1,
-    transition: { type: "tween", delay: 0.8, duration: 0.2 },
+    transition: { type: "tween", delay: 0.5, duration: 0.2 },
   },
 };
 
@@ -160,7 +180,9 @@ function Home() {
                       variants={MovieVariants}
                       whileHover="hover"
                       initial="normal"
-                      $bgPhoto={makeImagePath(movie.backdrop_path)}>
+                      $bgPhoto={makeImagePath(movie.backdrop_path)}
+                      style={{ overflow: "hidden" }}>
+                      <MovieOverlay variants={overlayVariants} />
                       <MovieInfo variants={MovieInfoVariants}>
                         <h4>{movie.title}</h4>
                       </MovieInfo>
