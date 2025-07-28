@@ -132,21 +132,20 @@ const MovieDetailCover = styled.div`
   height: 400px;
   background-size: cover;
   background-position: center center;
+  position: relative;
 `;
 
 const MovieDetailTitle = styled.h2`
   color: ${(props) => props.theme.white.lighter};
   font-size: 46px;
   padding: 10px;
-  position: relative;
-  top: -60px;
+  position: absolute;
+  bottom: 0;
 `;
 
 const MovieDetailOverview = styled.p`
   padding: 20px;
   color: ${(props) => props.theme.white.lighter};
-  position: relative;
-  top: -80px;
 `;
 
 // const rowVariants: Variants = {
@@ -281,9 +280,11 @@ function Home() {
                           backgroundImage: `linear-gradient(to top, black, transparent), url(
                             ${makeImagePath(clickedMovie.backdrop_path)}
                           )`,
-                        }}
-                      />
-                      <MovieDetailTitle>{clickedMovie.title}</MovieDetailTitle>
+                        }}>
+                        <MovieDetailTitle>
+                          {clickedMovie.title}
+                        </MovieDetailTitle>
+                      </MovieDetailCover>
                       <MovieDetailOverview>
                         {clickedMovie.overview}
                       </MovieDetailOverview>
