@@ -238,6 +238,7 @@ function Header() {
                   setSearchOpen(false);
                   if (inputRef.current) inputRef.current.value = "";
                 }}
+                autoComplete="off"
                 initial={{ scaleX: 0 }}
                 animate={inputAnimation}
                 exit={{ scaleX: 0 }}
