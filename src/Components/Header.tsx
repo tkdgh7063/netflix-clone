@@ -5,7 +5,6 @@ import {
   useAnimation,
   useMotionValueEvent,
   useScroll,
-  useTransform,
   Variants,
 } from "motion/react";
 import { Link, useHistory, useRouteMatch } from "react-router-dom";
@@ -22,6 +21,7 @@ const Nav = styled(motion.nav)`
   font-size: 14px;
   padding: 20px 60px;
   color: white;
+  z-index: 99;
 `;
 
 const Col = styled.div`
