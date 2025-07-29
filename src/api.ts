@@ -132,14 +132,17 @@ export interface MultiResult {
 }
 
 export interface MoviesResult {
-  dates: {
-    maximum: string;
-    minimum: string;
-  };
   page: number;
   results: Movie[];
   total_pages: number;
   total_results: number;
+}
+
+export interface DatesMoviesResult extends MoviesResult {
+  dates: {
+    maximum: string;
+    minimum: string;
+  };
 }
 
 export interface Video {
@@ -160,9 +163,42 @@ export interface VideoResult {
   results: Video[];
 }
 
-export async function getMovies() {
+export async function getNowPlayingMovies() {
   const res = await fetch(
     `${BASE_URL}/movie/now_playing?language=en-US&page=1&region=kr`,
+    options
+  );
+  return await res.json();
+}
+
+export async function getPopularMovies() {
+  const res = await fetch(
+    `${BASE_URL}/movie/popular?language=en-US&page=1`,
+    options
+  );
+  return await res.json();
+}
+
+export async function getTopRatedMovies() {
+  const res = await fetch(
+    `${BASE_URL}/movie/top_rated?language=en-US&page=1`,
+    options
+  );
+  return await res.json();
+}
+
+export async function getUpcomingMovies() {
+  const res = await fetch(
+    `${BASE_URL}/movie/upcoming?language=en-US&page=1`,
+    options
+  );
+  return await res.json();
+}
+
+export async function getLatestMovies() {
+  const today = new Date().toISOString().split("T")[0];
+  const res = await fetch(
+    `${BASE_URL}/discover/movie?language=en-US&page=1&primary_release_date.lte=${today}&region=en-US&sort_by=primary_release_date.desc`,
     options
   );
   return await res.json();
