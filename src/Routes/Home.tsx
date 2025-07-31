@@ -170,7 +170,7 @@ function Home() {
 
   return (
     <Wrapper>
-      {nowPlayingLoading ? (
+      {nowPlayingLoading && latestLoading ? (
         <Loader>Loading...</Loader>
       ) : (
         <>
@@ -192,7 +192,11 @@ function Home() {
                       <MovieDetailCover
                         style={{
                           backgroundImage: `linear-gradient(to top, black, transparent), url(
-                            ${makeImagePath(clickedMovie.backdrop_path)}
+                            ${
+                              clickedMovie.backdrop_path
+                                ? makeImagePath(clickedMovie.backdrop_path)
+                                : ""
+                            }
                           )`,
                         }}>
                         <MovieDetailTitle>
