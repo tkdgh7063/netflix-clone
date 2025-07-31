@@ -23,10 +23,12 @@ import { useHistory, useRouteMatch } from "react-router-dom";
 import NowPlaying from "../Components/NowPlaying";
 import Latest from "../Components/Latest";
 import Popular from "../Components/Popular";
+import TopRated from "../Components/TopRated";
+import Upcoming from "../Components/Upcoming";
 
 const Wrapper = styled.div`
   background-color: black;
-  height: 200vh;
+  min-height: 200vh;
   overflow-x: hidden;
 `;
 
@@ -173,6 +175,12 @@ function Home() {
       ) ||
       popularMovies?.results.find(
         (movie) => movie.id === +movieMatch.params.movieId
+      ) ||
+      topRatedMovies?.results.find(
+        (movie) => movie.id === +movieMatch.params.movieId
+      ) ||
+      upcomingMovies?.results.find(
+        (movie) => movie.id === +movieMatch.params.movieId
       ));
 
   const onMovieEscape = () => {
@@ -181,7 +189,11 @@ function Home() {
 
   return (
     <Wrapper>
-      {nowPlayingLoading && latestLoading && popularLoading ? (
+      {nowPlayingLoading &&
+      latestLoading &&
+      popularLoading &&
+      topRatedLoading &&
+      upcomingLoading ? (
         <Loader>Loading...</Loader>
       ) : (
         <>
@@ -189,13 +201,21 @@ function Home() {
             nowPlayingMovies={nowPlayingMovies!}
             setCategory={() => onMovieClick("NP")}
           />
-          <Latest
+          {/* <Latest
             latestMovies={latestMovies!}
             setCategory={() => onMovieClick("Latest")}
-          />
+          /> */}
           <Popular
             popularMovies={popularMovies!}
             setCategory={() => onMovieClick("Popular")}
+          />
+          <TopRated
+            topRatedMovies={topRatedMovies!}
+            setCategory={() => onMovieClick("TopRated")}
+          />
+          <Upcoming
+            upcomingMovies={upcomingMovies!}
+            setCategory={() => onMovieClick("Upcoming")}
           />
           <AnimatePresence>
             {movieMatch ? (

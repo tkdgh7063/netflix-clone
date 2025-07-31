@@ -119,11 +119,11 @@ const MovieInfoVariants: Variants = {
 };
 
 interface props {
-  popularMovies: MoviesResult;
+  topRatedMovies: MoviesResult;
   setCategory: () => void;
 }
 
-function Popular({ popularMovies, setCategory }: props) {
+function TopRated({ topRatedMovies, setCategory }: props) {
   const history = useHistory();
   const width = useWindowDimensions();
 
@@ -133,14 +133,14 @@ function Popular({ popularMovies, setCategory }: props) {
   const decrementIndex = () => {
     if (isExiting) return;
     setIsExiting(true);
-    const maxIndex = Math.floor(popularMovies?.results.length / OFFSET);
+    const maxIndex = Math.floor(topRatedMovies?.results.length / OFFSET);
     setIndex((prev) => (prev - 1 + maxIndex) % maxIndex);
   };
 
   const incrementIndex = () => {
     if (isExiting) return;
     setIsExiting(true);
-    const maxIndex = Math.floor(popularMovies?.results.length / OFFSET);
+    const maxIndex = Math.floor(topRatedMovies?.results.length / OFFSET);
     setIndex((prev) => (prev + 1) % maxIndex);
   };
 
@@ -151,7 +151,7 @@ function Popular({ popularMovies, setCategory }: props) {
 
   return (
     <Container>
-      <Title>Popular Movies</Title>
+      <Title>Top Rated Movies</Title>
       <SliderContainer>
         <Left onClick={decrementIndex}>&larr;</Left>
         <Slider>
@@ -164,12 +164,12 @@ function Popular({ popularMovies, setCategory }: props) {
               animate={{ x: 0 }}
               exit={{ x: -width - 5 }}
               transition={{ type: "tween", duration: 0.8 }}>
-              {popularMovies?.results
+              {topRatedMovies?.results
                 ?.slice(OFFSET * index, OFFSET * (index + 1))
                 .map((movie) => (
                   <Movie
                     key={movie.id}
-                    layoutId={"Popular" + movie.id.toString()}
+                    layoutId={"TopRated" + movie.id.toString()}
                     style={{ overflow: "hidden" }}
                     variants={MovieVariants}
                     initial="normal"
@@ -195,4 +195,4 @@ function Popular({ popularMovies, setCategory }: props) {
   );
 }
 
-export default Popular;
+export default TopRated;
