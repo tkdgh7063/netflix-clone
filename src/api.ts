@@ -173,7 +173,7 @@ export async function getNowPlayingMovies() {
 
 export async function getPopularMovies() {
   const res = await fetch(
-    `${BASE_URL}/movie/popular?language=en-US&page=1`,
+    `${BASE_URL}/movie/popular?language=en-US&page=1&region=kr`,
     options
   );
   return await res.json();

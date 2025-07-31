@@ -9,6 +9,7 @@ import { makeImagePath, OFFSET } from "../utils";
 const Container = styled.div`
   height: 200px;
   position: relative;
+  margin-bottom: 120px;
 `;
 
 const Title = styled.div`
@@ -158,7 +159,7 @@ function Latest(latestMovies: MoviesResult) {
               exit={{ x: -width - 5 }}
               transition={{ type: "tween", duration: 0.8 }}>
               {latestMovies?.results
-                .slice(OFFSET * index, OFFSET * (index + 1))
+                ?.slice(OFFSET * index, OFFSET * (index + 1))
                 .map((movie) => (
                   <Movie
                     key={movie.id}

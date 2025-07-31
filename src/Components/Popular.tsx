@@ -1,35 +1,20 @@
-import { styled } from "styled-components";
 import { AnimatePresence, motion, Variants } from "motion/react";
-import { makeImagePath, OFFSET } from "../utils";
-import { MoviesResult } from "../api";
-import { useHistory } from "react-router-dom";
-import useWindowDimensions from "../useWindowDimensions";
 import { useState } from "react";
+import { useHistory } from "react-router-dom";
+import styled from "styled-components";
+import { MoviesResult } from "../api";
+import useWindowDimensions from "../useWindowDimensions";
+import { makeImagePath, OFFSET } from "../utils";
 
 const Container = styled.div`
-  margin-bottom: 150px;
+  height: 200px;
+  position: relative;
 `;
 
-const Banner = styled.div<{ $bgPhoto: string }>`
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 60px;
-  background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.8)),
-    url(${(props) => props.$bgPhoto});
-  background-size: cover;
-`;
-
-const Title = styled.h2`
-  font-size: 68px;
-  margin-bottom: 15px;
-`;
-
-const Overview = styled.p`
-  width: 40%;
-  font-size: 18px;
-  font-weight: 200;
+const Title = styled.div`
+  margin-bottom: 12px;
+  font-size: 24px;
+  font-weight: 600;
 `;
 
 const SliderContainer = styled.div`
@@ -39,7 +24,6 @@ const SliderContainer = styled.div`
 
 const Slider = styled.div`
   position: relative;
-  top: -110px;
 `;
 
 const Button = styled.button`
@@ -47,7 +31,7 @@ const Button = styled.button`
   height: 40px;
   border-radius: 50%;
   position: absolute;
-  bottom: -10px;
+  top: 70px;
   z-index: 10;
 `;
 
@@ -63,16 +47,14 @@ const Row = styled(motion.div)`
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   gap: 5px;
-  position: absolute;
   width: 100%;
+  position: absolute;
 `;
 
 const Movie = styled(motion.div)<{ $bgPhoto: string }>`
-  background-color: white;
+  background-color: red;
   height: 200px;
   color: white;
-  font-size: 18px;
-  font-weight: 400;
   background-image: url(${(props) => props.$bgPhoto});
   background-position: center center;
   background-size: cover;
@@ -115,7 +97,7 @@ const MovieVariants: Variants = {
   normal: { scale: 1, transition: { type: "tween" } },
   hover: {
     scale: 1.2,
-    y: -50,
+    y: -40,
     transition: { type: "tween", delay: 0.5, duration: 0.3 },
   },
 };
@@ -135,7 +117,7 @@ const MovieInfoVariants: Variants = {
   },
 };
 
-function NowPlaying(nowPlayingMovies: MoviesResult) {
+function Popular(popularMovies: MoviesResult) {
   const history = useHistory();
   const width = useWindowDimensions();
 
@@ -143,22 +125,17 @@ function NowPlaying(nowPlayingMovies: MoviesResult) {
   const [isExiting, setIsExiting] = useState(false);
 
   const decrementIndex = () => {
-    if (nowPlayingMovies) {
-      if (isExiting) return;
-      setIsExiting(true);
-      const totalMovies = nowPlayingMovies?.results.length - 1;
-      const maxIndex = Math.floor(totalMovies / OFFSET);
-      setIndex((prev) => (prev - 1 + maxIndex) % maxIndex);
-    }
+    if (isExiting) return;
+    setIsExiting(true);
+    const maxIndex = Math.floor(popularMovies?.results.length / OFFSET);
+    setIndex((prev) => (prev - 1 + maxIndex) % maxIndex);
   };
+
   const incrementIndex = () => {
-    if (nowPlayingMovies) {
-      if (isExiting) return;
-      setIsExiting(true);
-      const totalMovies = nowPlayingMovies?.results.length - 1;
-      const maxIndex = Math.floor(totalMovies / OFFSET);
-      setIndex((prev) => (prev + 1) % maxIndex);
-    }
+    if (isExiting) return;
+    setIsExiting(true);
+    const maxIndex = Math.floor(popularMovies?.results.length / OFFSET);
+    setIndex((prev) => (prev + 1) % maxIndex);
   };
 
   const onMovieClick = (movieId: number) => {
@@ -167,13 +144,7 @@ function NowPlaying(nowPlayingMovies: MoviesResult) {
 
   return (
     <Container>
-      <Banner
-        $bgPhoto={makeImagePath(
-          nowPlayingMovies?.results[0].backdrop_path || ""
-        )}>
-        <Title>{nowPlayingMovies?.results[0].title}</Title>
-        <Overview>{nowPlayingMovies?.results[0].overview}</Overview>
-      </Banner>
+      <Title>Popular Movies</Title>
       <SliderContainer>
         <Left onClick={decrementIndex}>&larr;</Left>
         <Slider>
@@ -186,9 +157,8 @@ function NowPlaying(nowPlayingMovies: MoviesResult) {
               animate={{ x: 0 }}
               exit={{ x: -width - 5 }}
               transition={{ type: "tween", duration: 0.8 }}>
-              {nowPlayingMovies?.results
-                ?.slice(1)
-                .slice(OFFSET * index, OFFSET * (index + 1))
+              {popularMovies?.results
+                ?.slice(OFFSET * index, OFFSET * (index + 1))
                 .map((movie) => (
                   <Movie
                     key={movie.id}
@@ -216,4 +186,4 @@ function NowPlaying(nowPlayingMovies: MoviesResult) {
   );
 }
 
-export default NowPlaying;
+export default Popular;

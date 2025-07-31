@@ -12,6 +12,7 @@ import {
   DatesMoviesResult,
   getLatestMovies,
   getNowPlayingMovies,
+  getPopularMovies,
   getTopRatedMovies,
   getUpcomingMovies,
   MoviesResult,
@@ -21,6 +22,7 @@ import useWindowDimensions from "../useWindowDimensions";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import NowPlaying from "../Components/NowPlaying";
 import Latest from "../Components/Latest";
+import Popular from "../Components/Popular";
 
 const Wrapper = styled.div`
   background-color: black;
@@ -143,7 +145,11 @@ function Home() {
       ["movies", "upcoming"],
       getUpcomingMovies
     );
-    return [nowPlaying, latest, topRated, upcoming];
+    const popular = useQuery<MoviesResult>(
+      ["movies", "popular"],
+      getPopularMovies
+    );
+    return [nowPlaying, latest, topRated, upcoming, popular];
   };
 
   const [
@@ -151,6 +157,7 @@ function Home() {
     { isLoading: latestLoading, data: latestMovies },
     { isLoading: topRatedLoading, data: topRatedMovies },
     { isLoading: upcomingLoading, data: upcomingMovies },
+    { isLoading: popularLoading, data: popularMovies },
   ] = useMultipleQuery();
 
   const [category, setCategory] = useState(0);
@@ -162,6 +169,9 @@ function Home() {
     ) ||
       latestMovies?.results.find(
         (movie) => movie.id === +movieMatch.params.movieId
+      ) ||
+      popularMovies?.results.find(
+        (movie) => movie.id === +movieMatch.params.movieId
       ));
 
   const onMovieEscape = () => {
@@ -170,12 +180,13 @@ function Home() {
 
   return (
     <Wrapper>
-      {nowPlayingLoading && latestLoading ? (
+      {nowPlayingLoading && latestLoading && popularLoading ? (
         <Loader>Loading...</Loader>
       ) : (
         <>
           <NowPlaying {...nowPlayingMovies!} />
           <Latest {...latestMovies!} />
+          <Popular {...popularMovies!} />
           <AnimatePresence>
             {movieMatch ? (
               <>
