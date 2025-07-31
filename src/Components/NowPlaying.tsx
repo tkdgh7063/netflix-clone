@@ -168,9 +168,11 @@ function NowPlaying(nowPlayingMovies: MoviesResult) {
   return (
     <Container>
       <Banner
-        $bgPhoto={makeImagePath(
-          nowPlayingMovies?.results[0].backdrop_path || ""
-        )}>
+        $bgPhoto={
+          nowPlayingMovies?.results[0].backdrop_path
+            ? makeImagePath(nowPlayingMovies?.results[0].backdrop_path)
+            : ""
+        }>
         <Title>{nowPlayingMovies?.results[0].title}</Title>
         <Overview>{nowPlayingMovies?.results[0].overview}</Overview>
       </Banner>
