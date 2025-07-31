@@ -48,6 +48,7 @@ const Button = styled.button`
   border-radius: 50%;
   position: absolute;
   bottom: -10px;
+  z-index: 10;
 `;
 
 const Left = styled(Button)`
