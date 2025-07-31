@@ -6,6 +6,10 @@ import { useHistory } from "react-router-dom";
 import useWindowDimensions from "../useWindowDimensions";
 import { useState } from "react";
 
+const Container = styled.div`
+  margin-bottom: 150px;
+`;
+
 const Banner = styled.div<{ $bgPhoto: string }>`
   height: 100vh;
   display: flex;
@@ -26,10 +30,6 @@ const Overview = styled.p`
   width: 40%;
   font-size: 18px;
   font-weight: 200;
-`;
-
-const Container = styled.div`
-  margin-bottom: 150px;
 `;
 
 const SliderContainer = styled.div`
@@ -198,7 +198,9 @@ function NowPlaying(nowPlayingMovies: MoviesResult) {
                     initial="normal"
                     onClick={() => onMovieClick(movie.id)}
                     whileHover="hover"
-                    $bgPhoto={makeImagePath(movie.backdrop_path || "")}>
+                    $bgPhoto={makeImagePath(
+                      movie.backdrop_path ? movie.backdrop_path : ""
+                    )}>
                     <MovieOverlay variants={overlayVariants} />
                     <MovieInfo variants={MovieInfoVariants}>
                       <h4>{movie.title}</h4>

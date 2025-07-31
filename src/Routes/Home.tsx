@@ -157,9 +157,12 @@ function Home() {
 
   const clickedMovie =
     movieMatch?.params.movieId &&
-    nowPlayingMovies?.results.find(
+    (nowPlayingMovies?.results.find(
       (movie) => movie.id === +movieMatch.params.movieId
-    );
+    ) ||
+      latestMovies?.results.find(
+        (movie) => movie.id === +movieMatch.params.movieId
+      ));
 
   const onMovieEscape = () => {
     history.push("/");
@@ -197,7 +200,8 @@ function Home() {
                         </MovieDetailTitle>
                       </MovieDetailCover>
                       <MovieDetailOverview>
-                        {clickedMovie.overview}
+                        {clickedMovie.overview ||
+                          "No overview found for this movie"}
                       </MovieDetailOverview>
                     </>
                   )}
