@@ -118,7 +118,12 @@ const MovieInfoVariants: Variants = {
   },
 };
 
-function Latest(latestMovies: MoviesResult) {
+interface props {
+  latestMovies: MoviesResult;
+  setCategory: () => void;
+}
+
+function Latest({ latestMovies, setCategory }: props) {
   const history = useHistory();
   const width = useWindowDimensions();
 
@@ -141,6 +146,7 @@ function Latest(latestMovies: MoviesResult) {
 
   const onMovieClick = (movieId: number) => {
     history.push(`/movies/${movieId}`);
+    setCategory();
   };
 
   return (

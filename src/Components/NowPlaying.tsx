@@ -135,7 +135,12 @@ const MovieInfoVariants: Variants = {
   },
 };
 
-function NowPlaying(nowPlayingMovies: MoviesResult) {
+interface props {
+  nowPlayingMovies: MoviesResult;
+  setCategory: () => void;
+}
+
+function NowPlaying({ nowPlayingMovies, setCategory }: props) {
   const history = useHistory();
   const width = useWindowDimensions();
 
@@ -151,6 +156,7 @@ function NowPlaying(nowPlayingMovies: MoviesResult) {
       setIndex((prev) => (prev - 1 + maxIndex) % maxIndex);
     }
   };
+
   const incrementIndex = () => {
     if (nowPlayingMovies) {
       if (isExiting) return;
@@ -163,6 +169,7 @@ function NowPlaying(nowPlayingMovies: MoviesResult) {
 
   const onMovieClick = (movieId: number) => {
     history.push(`/movies/${movieId}`);
+    setCategory();
   };
 
   return (

@@ -160,7 +160,8 @@ function Home() {
     { isLoading: popularLoading, data: popularMovies },
   ] = useMultipleQuery();
 
-  const [category, setCategory] = useState(0);
+  const [category, setCategory] = useState("");
+  const onMovieClick = (category: string) => setCategory(category);
 
   const clickedMovie =
     movieMatch?.params.movieId &&
@@ -184,9 +185,18 @@ function Home() {
         <Loader>Loading...</Loader>
       ) : (
         <>
-          <NowPlaying {...nowPlayingMovies!} />
-          <Latest {...latestMovies!} />
-          <Popular {...popularMovies!} />
+          <NowPlaying
+            nowPlayingMovies={nowPlayingMovies!}
+            setCategory={() => onMovieClick("NP")}
+          />
+          <Latest
+            latestMovies={latestMovies!}
+            setCategory={() => onMovieClick("Latest")}
+          />
+          <Popular
+            popularMovies={popularMovies!}
+            setCategory={() => onMovieClick("Popular")}
+          />
           <AnimatePresence>
             {movieMatch ? (
               <>
@@ -196,7 +206,7 @@ function Home() {
                   exit={{ opacity: 0 }}
                 />
                 <MovieDetail
-                  layoutId={movieMatch.params.movieId}
+                  layoutId={category + movieMatch.params.movieId}
                   style={{ top: movieInfoY }}>
                   {clickedMovie && (
                     <>

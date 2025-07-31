@@ -117,7 +117,12 @@ const MovieInfoVariants: Variants = {
   },
 };
 
-function Popular(popularMovies: MoviesResult) {
+interface props {
+  popularMovies: MoviesResult;
+  setCategory: () => void;
+}
+
+function Popular({ popularMovies, setCategory }: props) {
   const history = useHistory();
   const width = useWindowDimensions();
 
@@ -140,6 +145,7 @@ function Popular(popularMovies: MoviesResult) {
 
   const onMovieClick = (movieId: number) => {
     history.push(`/movies/${movieId}`);
+    setCategory();
   };
 
   return (
@@ -162,7 +168,7 @@ function Popular(popularMovies: MoviesResult) {
                 .map((movie) => (
                   <Movie
                     key={movie.id}
-                    layoutId={"popular" + movie.id.toString()}
+                    layoutId={"Popular" + movie.id.toString()}
                     style={{ overflow: "hidden" }}
                     variants={MovieVariants}
                     initial="normal"
