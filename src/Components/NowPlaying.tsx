@@ -192,15 +192,17 @@ function NowPlaying(nowPlayingMovies: MoviesResult) {
                 .map((movie) => (
                   <Movie
                     key={movie.id}
-                    layoutId={movie.id.toString()}
+                    layoutId={"NP" + movie.id.toString()}
                     style={{ overflow: "hidden" }}
                     variants={MovieVariants}
                     initial="normal"
                     onClick={() => onMovieClick(movie.id)}
                     whileHover="hover"
-                    $bgPhoto={makeImagePath(
-                      movie.backdrop_path ? movie.backdrop_path : ""
-                    )}>
+                    $bgPhoto={
+                      movie.backdrop_path
+                        ? makeImagePath(movie.backdrop_path)
+                        : ""
+                    }>
                     <MovieOverlay variants={overlayVariants} />
                     <MovieInfo variants={MovieInfoVariants}>
                       <h4>{movie.title}</h4>
