@@ -14,6 +14,7 @@ const Container = styled.div`
 
 const Title = styled.div`
   margin-bottom: 12px;
+  padding-left: 60px;
   font-size: 24px;
   font-weight: 600;
 `;
@@ -37,11 +38,11 @@ const Button = styled.button`
 `;
 
 const Left = styled(Button)`
-  left: 0;
+  left: 10px;
 `;
 
 const Right = styled(Button)`
-  right: 0;
+  right: 10px;
 `;
 
 const Row = styled(motion.div)`
