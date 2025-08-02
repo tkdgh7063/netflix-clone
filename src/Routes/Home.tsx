@@ -15,10 +15,11 @@ import {
   getPopularMovies,
   getTopRatedMovies,
   getUpcomingMovies,
+  getVideoByMovieId,
   MoviesResult,
+  VideoResult,
 } from "../api";
-import { makeImagePath } from "../utils";
-import useWindowDimensions from "../useWindowDimensions";
+import { getTrailerVideoUrl, makeImagePath } from "../utils";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import NowPlaying from "../Components/NowPlaying";
 import Latest from "../Components/Latest";
@@ -37,40 +38,6 @@ const Loader = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-`;
-
-const SliderContainer = styled.div`
-  margin-bottom: 150px;
-`;
-
-const Slider = styled.div`
-  position: relative;
-`;
-
-const Row = styled(motion.div)`
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 5px;
-  position: absolute;
-  width: 100%;
-`;
-
-const Movie = styled(motion.div)<{ $bgPhoto: string }>`
-  background-color: white;
-  height: 200px;
-  color: white;
-  font-size: 18px;
-  font-weight: 400;
-  background-image: url(${(props) => props.$bgPhoto});
-  background-position: center center;
-  background-size: cover;
-  cursor: pointer;
-  &:first-child {
-    transform-origin: center left;
-  }
-  &:last-child {
-    transform-origin: center right;
-  }
 `;
 
 const Overlay = styled(motion.div)`
@@ -102,12 +69,15 @@ const MovieDetailCover = styled.div`
   position: relative;
 `;
 
+const MovieDetailVideo = styled.iframe`
+  width: 100%;
+  height: 400px;
+`;
+
 const MovieDetailTitle = styled.h2`
   color: ${(props) => props.theme.white.lighter};
   font-size: 46px;
   padding: 10px;
-  position: absolute;
-  bottom: 0;
 `;
 
 const MovieDetailOverview = styled.p`
@@ -161,6 +131,11 @@ function Home() {
     { isLoading: upcomingLoading, data: upcomingMovies },
     { isLoading: popularLoading, data: popularMovies },
   ] = useMultipleQuery();
+
+  const { isLoading: videoLoading, data: videos } = useQuery<VideoResult>(
+    ["videos", movieMatch?.params.movieId],
+    () => getVideoByMovieId(+movieMatch!.params.movieId)
+  );
 
   const [category, setCategory] = useState("");
   const onMovieClick = (category: string) => setCategory(category);
@@ -230,20 +205,29 @@ function Home() {
                   style={{ top: movieInfoY }}>
                   {clickedMovie && (
                     <>
-                      <MovieDetailCover
-                        style={{
-                          backgroundImage: `linear-gradient(to top, black, transparent), url(
+                      {videoLoading ? (
+                        <MovieDetailCover
+                          style={{
+                            backgroundImage: `linear-gradient(to top, black, transparent), url(
                             ${
                               clickedMovie.backdrop_path
                                 ? makeImagePath(clickedMovie.backdrop_path)
                                 : ""
                             }
                           )`,
-                        }}>
-                        <MovieDetailTitle>
-                          {clickedMovie.title}
-                        </MovieDetailTitle>
-                      </MovieDetailCover>
+                          }}>
+                          <MovieDetailTitle>
+                            {clickedMovie.title}
+                          </MovieDetailTitle>
+                        </MovieDetailCover>
+                      ) : (
+                        <MovieDetailVideo
+                          src={getTrailerVideoUrl(videos!.results) ?? ""}
+                          frameBorder="0"
+                          allowFullScreen
+                        />
+                      )}
+                      <MovieDetailTitle>{clickedMovie.title}</MovieDetailTitle>
                       <MovieDetailOverview>
                         {clickedMovie.overview ||
                           "No overview found for this movie"}
