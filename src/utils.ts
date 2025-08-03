@@ -17,18 +17,17 @@ export function toTitleCase(str: string): string {
 
 export function getTrailerVideoUrl(videos: Video[]): string | null {
   const trailerVideos = videos.filter(
-    (video) =>
-      video.type === "Trailer" &&
-      video.official === true &&
-      video.site === "YouTube"
+    (video) => video.type === "Trailer" && video.site === "YouTube"
   );
-  if (!trailerVideos) {
-    return null;
-  }
+  if (trailerVideos.length === 0) return null;
 
-  const trailer = trailerVideos.sort(
-    (a, b) =>
-      new Date(b.published_at).getTime() - new Date(a.published_at).getTime()
-  )[0];
+  const trailer =
+    trailerVideos.length === 1
+      ? trailerVideos[0]
+      : trailerVideos.sort(
+          (a, b) =>
+            new Date(b.published_at).getTime() -
+            new Date(a.published_at).getTime()
+        )[0];
   return `https://www.youtube-nocookie.com/embed/${trailer.key}?autoplay=1`;
 }

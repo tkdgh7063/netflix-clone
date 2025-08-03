@@ -70,8 +70,8 @@ const MovieDetailCover = styled.div`
 `;
 
 const MovieDetailVideo = styled.iframe`
-  width: 100%;
   height: 400px;
+  width: 100%;
 `;
 
 const MovieDetailTitle = styled.h2`
@@ -136,6 +136,8 @@ function Home() {
     ["videos", movieMatch?.params.movieId],
     () => getVideoByMovieId(+movieMatch!.params.movieId)
   );
+  const trailerUrl =
+    videos && videos.results ? getTrailerVideoUrl(videos.results) : null;
 
   const [category, setCategory] = useState("");
   const onMovieClick = (category: string) => setCategory(category);
@@ -205,31 +207,27 @@ function Home() {
                   style={{ top: movieInfoY }}>
                   {clickedMovie && (
                     <>
-                      {videoLoading ? (
+                      {trailerUrl ? (
+                        <MovieDetailVideo
+                          src={trailerUrl}
+                          referrerPolicy="strict-origin-when-cross-origin"
+                          allowFullScreen
+                        />
+                      ) : (
                         <MovieDetailCover
                           style={{
                             backgroundImage: `linear-gradient(to top, black, transparent), url(
-                            ${
-                              clickedMovie.backdrop_path
-                                ? makeImagePath(clickedMovie.backdrop_path)
-                                : ""
-                            }
-                          )`,
-                          }}>
-                          <MovieDetailTitle>
-                            {clickedMovie.title}
-                          </MovieDetailTitle>
-                        </MovieDetailCover>
-                      ) : (
-                        <MovieDetailVideo
-                          src={getTrailerVideoUrl(videos!.results) ?? ""}
-                          frameBorder="0"
-                          allowFullScreen
-                        />
+        ${
+          clickedMovie.backdrop_path
+            ? makeImagePath(clickedMovie.backdrop_path)
+            : ""
+        }
+      )`,
+                          }}></MovieDetailCover>
                       )}
                       <MovieDetailTitle>{clickedMovie.title}</MovieDetailTitle>
                       <MovieDetailOverview>
-                        {clickedMovie.overview ||
+                        {clickedMovie.overview ??
                           "No overview found for this movie"}
                       </MovieDetailOverview>
                     </>
