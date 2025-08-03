@@ -1,4 +1,3 @@
-import styled from "styled-components";
 import {
   AnimatePresence,
   motion,
@@ -7,9 +6,10 @@ import {
   useScroll,
   Variants,
 } from "motion/react";
-import { Link, useHistory, useRouteMatch } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
+import { Link, useHistory, useRouteMatch } from "react-router-dom";
+import styled from "styled-components";
 
 const Nav = styled(motion.nav)`
   display: flex;

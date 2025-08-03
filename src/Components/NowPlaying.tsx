@@ -1,10 +1,10 @@
-import { styled } from "styled-components";
 import { AnimatePresence, motion, Variants } from "motion/react";
-import { makeImagePath, OFFSET } from "../utils";
-import { MoviesResult } from "../api";
-import { useHistory } from "react-router-dom";
-import useWindowDimensions from "../useWindowDimensions";
 import { useState } from "react";
+import { useHistory } from "react-router-dom";
+import { styled } from "styled-components";
+import { MoviesResult } from "../api";
+import useWindowDimensions from "../useWindowDimensions";
+import { makeImagePath, OFFSET } from "../utils";
 
 const Container = styled.div`
   margin-bottom: 150px;

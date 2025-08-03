@@ -1,12 +1,7 @@
+import { AnimatePresence, motion, useScroll, useTransform } from "motion/react";
 import { useState } from "react";
-import {
-  AnimatePresence,
-  motion,
-  useScroll,
-  useTransform,
-  Variants,
-} from "motion/react";
 import { useQuery } from "react-query";
+import { useHistory, useRouteMatch } from "react-router-dom";
 import styled from "styled-components";
 import {
   DatesMoviesResult,
@@ -19,13 +14,11 @@ import {
   MoviesResult,
   VideoResult,
 } from "../api";
-import { getTrailerVideoUrl, makeImagePath } from "../utils";
-import { useHistory, useRouteMatch } from "react-router-dom";
 import NowPlaying from "../Components/NowPlaying";
-import Latest from "../Components/Latest";
 import Popular from "../Components/Popular";
 import TopRated from "../Components/TopRated";
 import Upcoming from "../Components/Upcoming";
+import { getTrailerVideoUrl, makeImagePath } from "../utils";
 
 const Wrapper = styled.div`
   background-color: black;
@@ -207,7 +200,7 @@ function Home() {
                   style={{ top: movieInfoY }}>
                   {clickedMovie && (
                     <>
-                      {trailerUrl ? (
+                      {videoLoading && trailerUrl ? (
                         <MovieDetailVideo
                           src={trailerUrl}
                           referrerPolicy="strict-origin-when-cross-origin"
