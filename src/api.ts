@@ -12,39 +12,72 @@ const options = {
   },
 };
 
-export interface Movie {
+export interface Genre {
   id: number;
-  backdrop_path: string;
-  poster_path: string;
-  title: string;
-  overview: string;
-  adult: boolean;
-  genre_ids: number[];
-  original_language: string;
-  original_title: string;
-  popularity: number;
-  release_date: string;
-  video: boolean;
-  vote_average: number;
-  vote_count: number;
+  name: string;
 }
 
-export interface TV {
-  adult: boolean;
-  backdrop_path: string;
-  genre_ids: number[];
+export interface ProductionCompany {
   id: number;
-  origin_country: string[];
-  original_language: string;
-  original_name: string;
+  logo_path: string | null;
+  name: string;
+  origin_country: string;
+}
+
+export interface ProductionCountry {
+  iso_3166_1: string;
+  name: string;
+}
+
+export interface SpokenLanguage {
+  english_name: string;
+  iso_639_1: string;
+  name: string;
+}
+
+interface BaseMedia {
+  id: number;
+  backdrop_path: string | null;
+  poster_path: string | null;
   overview: string;
   popularity: number;
-  poster_path: string;
-  first_air_date: string;
-  name: string;
+  genre_ids: number[];
   vote_average: number;
   vote_count: number;
+  adult: boolean;
+  original_language: string;
 }
+
+export interface Movie extends BaseMedia {
+  title: string;
+  original_title: string;
+  release_date: string;
+  video: boolean;
+}
+
+export interface MovieDetail extends Omit<Movie, "genre_ids"> {
+  belongs_to_collection: string;
+  budget: number;
+  genres: Genre[];
+  homepage: string;
+  imdb_id: string;
+  production_companies: ProductionCompany[];
+  production_countries: ProductionCountry[];
+  revenue: number;
+  runtime: number;
+  spoken_languages: SpokenLanguage[];
+  status: string;
+  tagline: string;
+}
+
+export interface TV extends BaseMedia {
+  name: string;
+  original_name: string;
+  first_air_date: string;
+  origin_country: string[];
+}
+
+export interface TVDetail extends Omit<TV, "genre_ids"> {}
 
 export interface Person {
   adult: boolean;
@@ -58,92 +91,35 @@ export interface Person {
   known_for: KnownForMedia[];
 }
 
-interface KnownForMedia {
-  adult: boolean;
-  backdrop_path: string;
-  id: number;
-  title: string;
-  original_language: string;
-  original_title: string;
-  overview: string;
-  poster_path: string;
-  media_type: string;
-  genre_ids: number[];
-  popularity: number;
-  release_date: string;
-  video: boolean;
-  vote_average: number;
-  vote_count: number;
+interface KnownForMedia extends Omit<Movie, "title" | "release_date"> {
+  media_type: "movie" | "tv";
+  title?: string;
+  release_date?: string;
 }
 
-export interface MovieDetail {
-  adult: boolean;
-  backdrop_path: string;
-  belongs_to_collection: string;
-  budget: number;
-  genres: {
-    id: number;
-    name: string;
-  };
-  homepage: string;
-  id: number;
-  imdb_id: string;
-  original_language: string;
-  original_title: string;
-  overview: string;
-  popularity: number;
-  poster_path: string;
-  production_companies: {
-    id: number;
-    logo_path: string;
-    name: string;
-    origin_country: string;
-  };
-  production_countries: {
-    iso_3166_1: string;
-    name: string;
-  };
-  release_date: string;
-  revenue: number;
-  runtime: number;
-  spoken_languages: {
-    english_name: string;
-    iso_639_1: string;
-    name: string;
-  };
-  status: string;
-  tagline: string;
-  title: string;
-  video: boolean;
-  vote_average: number;
-  vote_count: number;
-}
-
-export type MovieResult = Movie & { media_type: "movie" };
-export type TVResult = TV & { media_type: "tv" };
-export type PersonResult = Person & { media_type: "person" };
-type MultiSearchResult = MovieResult | TVResult | PersonResult;
-
-export interface MultiResult {
+export interface PaginatedResult<T> {
   page: number;
-  results: MultiSearchResult[];
+  results: T[];
   total_pages: number;
   total_results: number;
 }
 
-export interface MoviesResult {
-  page: number;
-  results: Movie[];
-  total_pages: number;
-  total_results: number;
-}
-
-export interface DatesMoviesResult extends MoviesResult {
+export interface MoviesResultWithDates extends PaginatedResult<Movie> {
   dates: {
     maximum: string;
     minimum: string;
   };
 }
+
+export type MovieSearchResult = Movie & { media_type: "movie" };
+export type TVSearchResult = TV & { media_type: "tv" };
+export type PersonSearchResult = Person & { media_type: "person" };
+export type MultiSearchResult =
+  | MovieSearchResult
+  | TVSearchResult
+  | PersonSearchResult;
+
+export type MultiResult = PaginatedResult<MultiSearchResult>;
 
 export interface Video {
   iso_639_1: string;
@@ -158,7 +134,7 @@ export interface Video {
   id: string;
 }
 
-export interface VideoResult {
+export interface VideoSearchResult {
   id: number;
   results: Video[];
 }

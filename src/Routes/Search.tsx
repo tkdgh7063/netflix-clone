@@ -3,10 +3,10 @@ import { useLocation } from "react-router-dom";
 import { styled } from "styled-components";
 import {
   getMultiSearch,
-  MovieResult,
+  MovieSearchResult,
   MultiResult,
-  PersonResult,
-  TVResult,
+  PersonSearchResult,
+  TVSearchResult,
 } from "../api";
 import { toTitleCase } from "../utils";
 
@@ -74,13 +74,13 @@ function Search() {
   }
 
   const MoviesResult = data?.results.filter(
-    (item): item is MovieResult => item.media_type === "movie"
+    (item): item is MovieSearchResult => item.media_type === "movie"
   );
   const TVsResult = data?.results.filter(
-    (item): item is TVResult => item.media_type === "tv"
+    (item): item is TVSearchResult => item.media_type === "tv"
   );
   const PeopleResult = data?.results.filter(
-    (item): item is PersonResult => item.media_type === "person"
+    (item): item is PersonSearchResult => item.media_type === "person"
   );
 
   return (

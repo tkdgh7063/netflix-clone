@@ -2,7 +2,7 @@ import { AnimatePresence, motion, Variants } from "motion/react";
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { styled } from "styled-components";
-import { MoviesResult } from "../api";
+import { Movie, PaginatedResult } from "../api";
 import useWindowDimensions from "../useWindowDimensions";
 import { makeImagePath, OFFSET } from "../utils";
 
@@ -67,7 +67,7 @@ const Row = styled(motion.div)`
   width: 100%;
 `;
 
-const Movie = styled(motion.div)<{ $bgPhoto: string }>`
+const MovieBox = styled(motion.div)<{ $bgPhoto: string }>`
   background-color: white;
   height: 200px;
   color: white;
@@ -136,7 +136,7 @@ const MovieInfoVariants: Variants = {
 };
 
 interface props {
-  nowPlayingMovies: MoviesResult;
+  nowPlayingMovies: PaginatedResult<Movie>;
   setCategory: () => void;
 }
 
@@ -199,7 +199,7 @@ function NowPlaying({ nowPlayingMovies, setCategory }: props) {
                 ?.slice(1)
                 .slice(OFFSET * index, OFFSET * (index + 1))
                 .map((movie) => (
-                  <Movie
+                  <MovieBox
                     key={movie.id}
                     layoutId={"NP" + movie.id.toString()}
                     style={{ overflow: "hidden" }}
@@ -216,7 +216,7 @@ function NowPlaying({ nowPlayingMovies, setCategory }: props) {
                     <MovieInfo variants={MovieInfoVariants}>
                       <h4>{movie.title}</h4>
                     </MovieInfo>
-                  </Movie>
+                  </MovieBox>
                 ))}
             </Row>
           </AnimatePresence>

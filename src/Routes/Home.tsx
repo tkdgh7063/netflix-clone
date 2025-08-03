@@ -4,15 +4,16 @@ import { useQuery } from "react-query";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import styled from "styled-components";
 import {
-  DatesMoviesResult,
   getLatestMovies,
   getNowPlayingMovies,
   getPopularMovies,
   getTopRatedMovies,
   getUpcomingMovies,
   getVideoByMovieId,
-  MoviesResult,
-  VideoResult,
+  Movie,
+  MoviesResultWithDates,
+  PaginatedResult,
+  VideoSearchResult,
 } from "../api";
 import NowPlaying from "../Components/NowPlaying";
 import Popular from "../Components/Popular";
@@ -94,23 +95,23 @@ function Home() {
   const movieInfoY = useTransform(scrollY, (latest) => latest + 100);
 
   const useMultipleQuery = () => {
-    const nowPlaying = useQuery<DatesMoviesResult>(
+    const nowPlaying = useQuery<MoviesResultWithDates>(
       ["movies", "nowPlaying"],
       getNowPlayingMovies
     );
-    const latest = useQuery<MoviesResult>(
+    const latest = useQuery<PaginatedResult<Movie>>(
       ["movies", "latest"],
       getLatestMovies
     );
-    const topRated = useQuery<MoviesResult>(
+    const topRated = useQuery<PaginatedResult<Movie>>(
       ["movies", "topRated"],
       getTopRatedMovies
     );
-    const upcoming = useQuery<DatesMoviesResult>(
+    const upcoming = useQuery<MoviesResultWithDates>(
       ["movies", "upcoming"],
       getUpcomingMovies
     );
-    const popular = useQuery<MoviesResult>(
+    const popular = useQuery<PaginatedResult<Movie>>(
       ["movies", "popular"],
       getPopularMovies
     );
@@ -125,7 +126,7 @@ function Home() {
     { isLoading: popularLoading, data: popularMovies },
   ] = useMultipleQuery();
 
-  const { isLoading: videoLoading, data: videos } = useQuery<VideoResult>(
+  const { isLoading: videoLoading, data: videos } = useQuery<VideoSearchResult>(
     ["videos", movieMatch?.params.movieId],
     () => getVideoByMovieId(+movieMatch!.params.movieId)
   );
@@ -200,7 +201,7 @@ function Home() {
                   style={{ top: movieInfoY }}>
                   {clickedMovie && (
                     <>
-                      {videoLoading && trailerUrl ? (
+                      {!videoLoading && trailerUrl ? (
                         <MovieDetailVideo
                           src={trailerUrl}
                           referrerPolicy="strict-origin-when-cross-origin"
