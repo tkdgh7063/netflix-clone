@@ -13,7 +13,7 @@ import NowPlaying from "../Components/NowPlaying";
 import Popular from "../Components/Popular";
 import TopRated from "../Components/TopRated";
 import Upcoming from "../Components/Upcoming";
-import { getTrailerVideoUrl, makeImagePath } from "../utils";
+import { getTrailerVideoUrl, makeImagePath, makeLayoutId } from "../utils";
 
 const Wrapper = styled.div`
   background-color: black;
@@ -81,27 +81,30 @@ const MovieDetailOverview = styled.p`
 
 function Home() {
   const history = useHistory();
-  const movieMatch = useRouteMatch<{ movieId: string }>("/movies/:movieId");
+  const movieMatch = useRouteMatch<{ category: string; movieId: string }>(
+    "/movies/:category/:movieId"
+  );
 
   const { scrollY } = useScroll();
   const movieInfoY = useTransform(scrollY, (latest) => latest + 100);
 
   const fetchingCount = useIsFetching({ queryKey: ["movies"] });
 
+  const numericMovieId = movieMatch?.params.movieId
+    ? Number(movieMatch.params.movieId)
+    : null;
   const { isLoading: videoLoading, data: videos } = useQuery<VideoSearchResult>(
-    ["videos", movieMatch?.params.movieId],
-    () => getVideoByMovieId(+movieMatch!.params.movieId)
+    {
+      queryKey: ["videos", numericMovieId],
+      queryFn: () => getVideoByMovieId(numericMovieId!),
+      enabled: !!numericMovieId,
+    }
   );
   const trailerUrl =
     videos && videos.results ? getTrailerVideoUrl(videos.results) : null;
 
-  const [category, setCategory] = useState("");
-  const onMovieClick = (category: string) => setCategory(category);
-
-  const movieId = movieMatch?.params.movieId;
-  const numericMovieId = movieId ? Number(movieId) : null;
   const { data: clickedMovie } = useQuery<MovieDetail>({
-    queryKey: ["movie", movieId],
+    queryKey: ["movie", movieMatch?.params.movieId],
     queryFn: () => getMovieById(numericMovieId!),
     enabled: !!numericMovieId,
   });
@@ -123,10 +126,10 @@ function Home() {
         <Loader>Loading...</Loader>
       ) : (
         <>
-          <NowPlaying setCategory={() => onMovieClick("NP")} />
-          <Popular setCategory={() => onMovieClick("Popular")} />
-          <TopRated setCategory={() => onMovieClick("TopRated")} />
-          <Upcoming setCategory={() => onMovieClick("Upcoming")} />
+          <NowPlaying />
+          <Popular />
+          <TopRated />
+          <Upcoming />
           <AnimatePresence>
             {movieMatch ? (
               <>
@@ -136,7 +139,10 @@ function Home() {
                   exit={{ opacity: 0 }}
                 />
                 <MovieDetailContainer
-                  layoutId={category + movieMatch.params.movieId}
+                  layoutId={makeLayoutId(
+                    movieMatch.params.category,
+                    movieMatch.params.movieId
+                  )}
                   style={{ top: movieInfoY }}>
                   {clickedMovie && (
                     <>

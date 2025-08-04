@@ -31,3 +31,7 @@ export function getTrailerVideoUrl(videos: Video[]): string | null {
         )[0];
   return `https://www.youtube-nocookie.com/embed/${trailer.key}?autoplay=1`;
 }
+
+export function makeLayoutId(category: string, movieId: string) {
+  return `${category.toLowerCase()}${movieId}`;
+}

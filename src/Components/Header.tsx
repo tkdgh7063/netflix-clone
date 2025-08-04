@@ -135,7 +135,7 @@ function Header() {
 
   const { scrollY } = useScroll();
   useMotionValueEvent(scrollY, "change", (latest) => {
-    if (latest > 255) {
+    if (latest > 230) {
       navAnimation.start("scroll");
     } else {
       navAnimation.start("top");
