@@ -79,6 +79,18 @@ const MovieInfo = styled(motion.div)`
   }
 `;
 
+const SliderVariants: Variants = {
+  enter: ({ direction, width }: { direction: number; width: number }) => ({
+    x: direction < 0 ? width + 5 : -width - 5,
+  }),
+  center: {
+    x: 0,
+  },
+  exit: ({ direction, width }: { direction: number; width: number }) => ({
+    x: direction > 0 ? width + 5 : -width - 5,
+  }),
+};
+
 const MovieVariants: Variants = {
   normal: { scale: 1, transition: { type: "tween" } },
   hover: (custom: { isFirst: boolean; isLast: boolean }) => ({
@@ -115,10 +127,12 @@ const Slider = ({ category, movies }: SliderProps) => {
 
   const [index, setIndex] = useState(0);
   const [isExiting, setIsExiting] = useState(false);
+  const [direction, setDirection] = useState(0);
 
   const decrementIndex = () => {
     if (movies) {
       if (isExiting) return;
+      setDirection(1);
       setIsExiting(true);
       const maxIndex = Math.floor(movies.length / OFFSET);
       setIndex((prev) => (prev - 1 + maxIndex) % maxIndex);
@@ -128,6 +142,7 @@ const Slider = ({ category, movies }: SliderProps) => {
   const incrementIndex = () => {
     if (movies) {
       if (isExiting) return;
+      setDirection(-1);
       setIsExiting(true);
       const maxIndex = Math.floor(movies.length / OFFSET);
       setIndex((prev) => (prev + 1) % maxIndex);
@@ -144,12 +159,15 @@ const Slider = ({ category, movies }: SliderProps) => {
       <MovieRow>
         <AnimatePresence
           initial={false}
+          custom={{ direction, width }}
           onExitComplete={() => setIsExiting(false)}>
           <Row
             key={index}
-            initial={{ x: width + 5 }}
-            animate={{ x: 0 }}
-            exit={{ x: -width - 5 }}
+            variants={SliderVariants}
+            custom={{ direction, width }}
+            initial="enter"
+            animate="center"
+            exit="exit"
             transition={{ type: "tween", duration: 0.8 }}>
             {movies
               .slice(OFFSET * index, OFFSET * (index + 1))
