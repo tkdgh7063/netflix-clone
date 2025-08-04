@@ -1,8 +1,9 @@
 import { AnimatePresence, motion, Variants } from "motion/react";
 import { useState } from "react";
+import { useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
-import { Movie, PaginatedResult } from "../api";
+import { getUpcomingMovies, Movie, PaginatedResult } from "../api";
 import useWindowDimensions from "../useWindowDimensions";
 import { makeImagePath, OFFSET } from "../utils";
 
@@ -120,29 +121,36 @@ const MovieInfoVariants: Variants = {
 };
 
 interface props {
-  upcomingMovies: PaginatedResult<Movie>;
   setCategory: () => void;
 }
 
-function Upcoming({ upcomingMovies, setCategory }: props) {
+function Upcoming({ setCategory }: props) {
   const history = useHistory();
   const width = useWindowDimensions();
 
+  const { isLoading, data: upcomingMovies } = useQuery<PaginatedResult<Movie>>(
+    ["movies", "upcoming"],
+    getUpcomingMovies
+  );
   const [index, setIndex] = useState(0);
   const [isExiting, setIsExiting] = useState(false);
 
   const decrementIndex = () => {
-    if (isExiting) return;
-    setIsExiting(true);
-    const maxIndex = Math.floor(upcomingMovies?.results.length / OFFSET);
-    setIndex((prev) => (prev - 1 + maxIndex) % maxIndex);
+    if (upcomingMovies) {
+      if (isExiting) return;
+      setIsExiting(true);
+      const maxIndex = Math.floor(upcomingMovies?.results.length / OFFSET);
+      setIndex((prev) => (prev - 1 + maxIndex) % maxIndex);
+    }
   };
 
   const incrementIndex = () => {
-    if (isExiting) return;
-    setIsExiting(true);
-    const maxIndex = Math.floor(upcomingMovies?.results.length / OFFSET);
-    setIndex((prev) => (prev + 1) % maxIndex);
+    if (upcomingMovies) {
+      if (isExiting) return;
+      setIsExiting(true);
+      const maxIndex = Math.floor(upcomingMovies?.results.length / OFFSET);
+      setIndex((prev) => (prev + 1) % maxIndex);
+    }
   };
 
   const onMovieClick = (movieId: number) => {

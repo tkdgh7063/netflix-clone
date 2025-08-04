@@ -1,8 +1,9 @@
 import { AnimatePresence, motion, Variants } from "motion/react";
 import { useState } from "react";
+import { useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import { styled } from "styled-components";
-import { Movie, PaginatedResult } from "../api";
+import { getNowPlayingMovies, MoviesResultWithDates } from "../api";
 import useWindowDimensions from "../useWindowDimensions";
 import { makeImagePath, OFFSET } from "../utils";
 
@@ -136,14 +137,17 @@ const MovieInfoVariants: Variants = {
 };
 
 interface props {
-  nowPlayingMovies: PaginatedResult<Movie>;
   setCategory: () => void;
 }
 
-function NowPlaying({ nowPlayingMovies, setCategory }: props) {
+function NowPlaying({ setCategory }: props) {
   const history = useHistory();
   const width = useWindowDimensions();
 
+  const { isLoading, data: nowPlayingMovies } = useQuery<MoviesResultWithDates>(
+    ["movies", "nowPlaying"],
+    getNowPlayingMovies
+  );
   const [index, setIndex] = useState(0);
   const [isExiting, setIsExiting] = useState(false);
 

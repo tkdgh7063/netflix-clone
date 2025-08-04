@@ -185,6 +185,7 @@ export async function getMovieById(movieId: number) {
     `${BASE_URL}/movie/${movieId}?language=en-US`,
     options
   );
+  return await res.json();
 }
 
 export async function getMultiSearch(query: string) {

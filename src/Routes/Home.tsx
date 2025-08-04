@@ -1,18 +1,12 @@
 import { AnimatePresence, motion, useScroll, useTransform } from "motion/react";
-import { useState } from "react";
-import { useQuery } from "react-query";
+import { useEffect, useState } from "react";
+import { useIsFetching, useQuery } from "react-query";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import styled from "styled-components";
 import {
-  getLatestMovies,
-  getNowPlayingMovies,
-  getPopularMovies,
-  getTopRatedMovies,
-  getUpcomingMovies,
+  getMovieById,
   getVideoByMovieId,
-  Movie,
-  MoviesResultWithDates,
-  PaginatedResult,
+  MovieDetail,
   VideoSearchResult,
 } from "../api";
 import NowPlaying from "../Components/NowPlaying";
@@ -43,7 +37,7 @@ const Overlay = styled(motion.div)`
   opacity: 0;
 `;
 
-const MovieDetail = styled(motion.div)`
+const MovieDetailContainer = styled(motion.div)`
   width: 40vw;
   height: 80vh;
   margin: 0 auto;
@@ -85,8 +79,6 @@ const MovieDetailOverview = styled.p`
 //   exit: { x: -window.innerWidth - 5 },
 // };
 
-const offset = 6;
-
 function Home() {
   const history = useHistory();
   const movieMatch = useRouteMatch<{ movieId: string }>("/movies/:movieId");
@@ -94,37 +86,7 @@ function Home() {
   const { scrollY } = useScroll();
   const movieInfoY = useTransform(scrollY, (latest) => latest + 100);
 
-  const useMultipleQuery = () => {
-    const nowPlaying = useQuery<MoviesResultWithDates>(
-      ["movies", "nowPlaying"],
-      getNowPlayingMovies
-    );
-    const latest = useQuery<PaginatedResult<Movie>>(
-      ["movies", "latest"],
-      getLatestMovies
-    );
-    const topRated = useQuery<PaginatedResult<Movie>>(
-      ["movies", "topRated"],
-      getTopRatedMovies
-    );
-    const upcoming = useQuery<MoviesResultWithDates>(
-      ["movies", "upcoming"],
-      getUpcomingMovies
-    );
-    const popular = useQuery<PaginatedResult<Movie>>(
-      ["movies", "popular"],
-      getPopularMovies
-    );
-    return [nowPlaying, latest, topRated, upcoming, popular];
-  };
-
-  const [
-    { isLoading: nowPlayingLoading, data: nowPlayingMovies },
-    { isLoading: latestLoading, data: latestMovies },
-    { isLoading: topRatedLoading, data: topRatedMovies },
-    { isLoading: upcomingLoading, data: upcomingMovies },
-    { isLoading: popularLoading, data: popularMovies },
-  ] = useMultipleQuery();
+  const fetchingCount = useIsFetching({ queryKey: ["movies"] });
 
   const { isLoading: videoLoading, data: videos } = useQuery<VideoSearchResult>(
     ["videos", movieMatch?.params.movieId],
@@ -136,58 +98,35 @@ function Home() {
   const [category, setCategory] = useState("");
   const onMovieClick = (category: string) => setCategory(category);
 
-  const clickedMovie =
-    movieMatch?.params.movieId &&
-    (nowPlayingMovies?.results.find(
-      (movie) => movie.id === +movieMatch.params.movieId
-    ) ||
-      latestMovies?.results.find(
-        (movie) => movie.id === +movieMatch.params.movieId
-      ) ||
-      popularMovies?.results.find(
-        (movie) => movie.id === +movieMatch.params.movieId
-      ) ||
-      topRatedMovies?.results.find(
-        (movie) => movie.id === +movieMatch.params.movieId
-      ) ||
-      upcomingMovies?.results.find(
-        (movie) => movie.id === +movieMatch.params.movieId
-      ));
+  const movieId = movieMatch?.params.movieId;
+  const numericMovieId = movieId ? Number(movieId) : null;
+  const { data: clickedMovie } = useQuery<MovieDetail>({
+    queryKey: ["movie", movieId],
+    queryFn: () => getMovieById(numericMovieId!),
+    enabled: !!numericMovieId,
+  });
 
   const onMovieEscape = () => {
     history.push("/");
   };
 
+  const [initialLoading, setInitialLoading] = useState(true);
+  useEffect(() => {
+    if (fetchingCount === 0) {
+      setInitialLoading(false);
+    }
+  }, [fetchingCount]);
+
   return (
     <Wrapper>
-      {nowPlayingLoading &&
-      latestLoading &&
-      popularLoading &&
-      topRatedLoading &&
-      upcomingLoading ? (
+      {initialLoading ? (
         <Loader>Loading...</Loader>
       ) : (
         <>
-          <NowPlaying
-            nowPlayingMovies={nowPlayingMovies!}
-            setCategory={() => onMovieClick("NP")}
-          />
-          {/* <Latest
-            latestMovies={latestMovies!}
-            setCategory={() => onMovieClick("Latest")}
-          /> */}
-          <Popular
-            popularMovies={popularMovies!}
-            setCategory={() => onMovieClick("Popular")}
-          />
-          <TopRated
-            topRatedMovies={topRatedMovies!}
-            setCategory={() => onMovieClick("TopRated")}
-          />
-          <Upcoming
-            upcomingMovies={upcomingMovies!}
-            setCategory={() => onMovieClick("Upcoming")}
-          />
+          <NowPlaying setCategory={() => onMovieClick("NP")} />
+          <Popular setCategory={() => onMovieClick("Popular")} />
+          <TopRated setCategory={() => onMovieClick("TopRated")} />
+          <Upcoming setCategory={() => onMovieClick("Upcoming")} />
           <AnimatePresence>
             {movieMatch ? (
               <>
@@ -196,7 +135,7 @@ function Home() {
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                 />
-                <MovieDetail
+                <MovieDetailContainer
                   layoutId={category + movieMatch.params.movieId}
                   style={{ top: movieInfoY }}>
                   {clickedMovie && (
@@ -225,7 +164,7 @@ function Home() {
                       </MovieDetailOverview>
                     </>
                   )}
-                </MovieDetail>
+                </MovieDetailContainer>
               </>
             ) : null}
           </AnimatePresence>
