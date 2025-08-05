@@ -1,7 +1,7 @@
 import { AnimatePresence, motion, useScroll, useTransform } from "motion/react";
 import { useEffect, useState } from "react";
 import { useIsFetching, useQuery } from "react-query";
-import { useHistory, useRouteMatch } from "react-router-dom";
+import { Link, useHistory, useRouteMatch } from "react-router-dom";
 import styled from "styled-components";
 import {
   getMovieById,
@@ -71,6 +71,20 @@ const MovieDetailTitle = styled.h2`
 const MovieDetailOverview = styled.p`
   padding: 20px;
   color: ${(props) => props.theme.white.lighter};
+`;
+
+const MovieDetailLink = styled(Link)`
+  background-color: white;
+  width: 110px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: black;
+  position: absolute;
+  bottom: 30px;
+  left: 18px;
 `;
 
 // const rowVariants: Variants = {
@@ -168,6 +182,9 @@ function Home() {
                         {clickedMovie.overview ??
                           "No overview found for this movie"}
                       </MovieDetailOverview>
+                      <MovieDetailLink to={`/movie/${clickedMovie.id}/detail`}>
+                        More Details
+                      </MovieDetailLink>
                     </>
                   )}
                 </MovieDetailContainer>
