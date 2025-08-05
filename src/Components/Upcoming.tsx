@@ -6,7 +6,6 @@ import Slider from "./Slider";
 const Container = styled.div`
   height: 200px;
   position: relative;
-  margin-bottom: 120px;
 `;
 
 const Title = styled.div`
