@@ -100,14 +100,14 @@ function Home() {
       enabled: !!numericMovieId,
     }
   );
-  const trailerUrl =
-    videos && videos.results ? getTrailerVideoUrl(videos.results) : null;
-
   const { data: clickedMovie } = useQuery<MovieDetail>({
     queryKey: ["movie", movieMatch?.params.movieId],
     queryFn: () => getMovieById(numericMovieId!),
     enabled: !!numericMovieId,
   });
+
+  const trailerUrl =
+    videos && videos.results ? getTrailerVideoUrl(videos.results) : null;
 
   const onMovieEscape = () => {
     history.push("/");

@@ -51,6 +51,12 @@ const MovieBox = styled(motion.div)<{ $bgPhoto: string }>`
   background-position: center center;
   background-size: cover;
   cursor: pointer;
+  &:first-child {
+    transform-origin: center left !important;
+  }
+  &:last-child {
+    transform-origin: center right !important;
+  }
 `;
 
 const MovieOverlay = styled(motion.div)`
@@ -92,14 +98,16 @@ const SliderVariants: Variants = {
 };
 
 const MovieVariants: Variants = {
-  normal: { scale: 1, transition: { type: "tween" } },
-  hover: (custom: { isFirst: boolean; isLast: boolean }) => ({
+  normal: {
+    scale: 1,
+    y: 0,
+    transition: { type: "tween" },
+  },
+  hover: {
     scale: 1.2,
     y: -50,
-    originX: custom.isFirst ? 0 : custom.isLast ? 1 : 0.5,
-    originY: 0.5,
     transition: { type: "tween", delay: 0.5, duration: 0.3 },
-  }),
+  },
 };
 
 const overlayVariants: Variants = {
@@ -169,34 +177,25 @@ const Slider = ({ category, movies }: SliderProps) => {
             animate="center"
             exit="exit"
             transition={{ type: "tween", duration: 0.8 }}>
-            {movies
-              .slice(OFFSET * index, OFFSET * (index + 1))
-              .map((movie, i, arr) => {
-                const layoutId = makeLayoutId(category, movie.id.toString());
-                const isFirst = i === 0;
-                const isLast = i === arr.length - 1;
-                return (
-                  <MovieBox
-                    key={movie.id}
-                    layoutId={layoutId}
-                    custom={{ isFirst, isLast }}
-                    style={{ overflow: "hidden" }}
-                    variants={MovieVariants}
-                    initial="normal"
-                    whileHover="hover"
-                    onClick={() => onMovieClick(movie.id)}
-                    $bgPhoto={
-                      movie.backdrop_path
-                        ? makeImagePath(movie.backdrop_path)
-                        : ""
-                    }>
-                    <MovieOverlay variants={overlayVariants} />
-                    <MovieInfo variants={MovieInfoVariants}>
-                      <h4>{movie.title}</h4>
-                    </MovieInfo>
-                  </MovieBox>
-                );
-              })}
+            {movies.slice(OFFSET * index, OFFSET * (index + 1)).map((movie) => (
+              <MovieBox
+                key={movie.id}
+                layoutId={makeLayoutId(category, movie.id.toString())}
+                style={{ overflow: "hidden" }}
+                variants={MovieVariants}
+                initial="normal"
+                animate="normal"
+                whileHover="hover"
+                onClick={() => onMovieClick(movie.id)}
+                $bgPhoto={
+                  movie.backdrop_path ? makeImagePath(movie.backdrop_path) : ""
+                }>
+                <MovieOverlay variants={overlayVariants} />
+                <MovieInfo variants={MovieInfoVariants}>
+                  <h4>{movie.title}</h4>
+                </MovieInfo>
+              </MovieBox>
+            ))}
           </Row>
         </AnimatePresence>
       </MovieRow>
