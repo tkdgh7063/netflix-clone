@@ -29,7 +29,7 @@ export function getTrailerVideoUrl(videos: Video[]): string | null {
             new Date(b.published_at).getTime() -
             new Date(a.published_at).getTime()
         )[0];
-  return `https://www.youtube-nocookie.com/embed/${trailer.key}?autoplay=1`;
+  return `https://www.youtube-nocookie.com/embed/${trailer.key}?autoplay=1&mute=1`;
 }
 
 export function makeLayoutId(category: string, movieId: string) {

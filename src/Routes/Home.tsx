@@ -17,7 +17,7 @@ import { getTrailerVideoUrl, makeImagePath, makeLayoutId } from "../utils";
 
 const Wrapper = styled.div`
   background-color: black;
-  min-height: 220vh;
+  min-height: 230vh;
   overflow-x: hidden;
 `;
 
