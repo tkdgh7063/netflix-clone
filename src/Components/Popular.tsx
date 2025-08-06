@@ -19,7 +19,8 @@ const Title = styled.div`
 function Popular() {
   const { isLoading, data: popularMovies } = useQuery<PaginatedResult<Movie>>(
     ["movies", "popular"],
-    getPopularMovies
+    getPopularMovies,
+    { staleTime: Infinity }
   );
 
   return isLoading ? (

@@ -18,7 +18,8 @@ const Title = styled.div`
 function Upcoming() {
   const { isLoading, data: upcomingMovies } = useQuery<MoviesResultWithDates>(
     ["movies", "upcoming"],
-    getUpcomingMovies
+    getUpcomingMovies,
+    { staleTime: Infinity }
   );
 
   return isLoading ? (

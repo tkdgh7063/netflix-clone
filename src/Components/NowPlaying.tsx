@@ -33,7 +33,8 @@ const Overview = styled.p`
 function NowPlaying() {
   const { isLoading, data: nowPlayingMovies } = useQuery<MoviesResultWithDates>(
     ["movies", "nowPlaying"],
-    getNowPlayingMovies
+    getNowPlayingMovies,
+    { staleTime: Infinity }
   );
 
   return isLoading ? (

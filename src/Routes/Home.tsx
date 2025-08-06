@@ -112,12 +112,14 @@ function Home() {
       queryKey: ["videos", numericMovieId],
       queryFn: () => getVideoByMovieId(numericMovieId!),
       enabled: !!numericMovieId,
+      staleTime: Infinity,
     }
   );
   const { data: clickedMovie } = useQuery<MovieDetail>({
     queryKey: ["movie", movieMatch?.params.movieId],
     queryFn: () => getMovieById(numericMovieId!),
     enabled: !!numericMovieId,
+    staleTime: Infinity,
   });
 
   const trailerUrl =

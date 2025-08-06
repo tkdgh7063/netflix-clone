@@ -19,7 +19,8 @@ const Title = styled.div`
 function TopRated() {
   const { isLoading, data: topRatedMovies } = useQuery<PaginatedResult<Movie>>(
     ["movies", "topRated"],
-    getTopRatedMovies
+    getTopRatedMovies,
+    { staleTime: Infinity }
   );
 
   return isLoading ? (
