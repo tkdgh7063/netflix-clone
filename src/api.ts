@@ -203,3 +203,8 @@ export async function getVideoByMovieId(movieId: number) {
   );
   return await res.json();
 }
+
+export async function getSimilarByMovieId(movieId: number) {
+  const res = await fetch(`${BASE_URL}/movie/${movieId}/similar`, options);
+  return await res.json();
+}
