@@ -9,6 +9,7 @@ import {
   MovieDetail,
   PaginatedResult,
 } from "../api";
+import ScrollToTop from "../Components/ScrollToTop";
 import Slider from "../Components/Slider";
 import { makeImagePath } from "../utils";
 
@@ -106,6 +107,7 @@ function MovieDetailPage() {
 
   return (
     <Wrapper>
+      <ScrollToTop />
       {isLoading ? (
         <Loader>Loading Details...</Loader>
       ) : (
