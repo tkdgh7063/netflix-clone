@@ -3,11 +3,11 @@ import { useEffect, useState } from "react";
 import { useIsFetching } from "react-query";
 import { useRouteMatch } from "react-router-dom";
 import styled from "styled-components";
-import MovieModal from "../Components/MovieModal";
-import NowPlaying from "../Components/NowPlaying";
-import Popular from "../Components/Popular";
-import TopRated from "../Components/TopRated";
-import Upcoming from "../Components/Upcoming";
+import MovieModal from "../Components/movie/MovieModal";
+import NowPlaying from "../Components/movie/NowPlaying";
+import Popular from "../Components/movie/Popular";
+import TopRated from "../Components/movie/TopRated";
+import Upcoming from "../Components/movie/Upcoming";
 
 const Wrapper = styled.div`
   background-color: black;

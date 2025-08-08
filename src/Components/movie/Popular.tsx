@@ -1,6 +1,6 @@
 import { useQuery } from "react-query";
 import styled from "styled-components";
-import { getTopRatedMovies, Movie, PaginatedResult } from "../api";
+import { getPopularMovies, Movie, PaginatedResult } from "../../api";
 import Slider from "./Slider";
 
 const Container = styled.div`
@@ -16,10 +16,10 @@ const Title = styled.div`
   font-weight: 600;
 `;
 
-function TopRated() {
-  const { isLoading, data: topRatedMovies } = useQuery<PaginatedResult<Movie>>(
-    ["movies", "topRated"],
-    getTopRatedMovies,
+function Popular() {
+  const { isLoading, data: popularMovies } = useQuery<PaginatedResult<Movie>>(
+    ["movies", "popular"],
+    getPopularMovies,
     { staleTime: Infinity }
   );
 
@@ -27,10 +27,10 @@ function TopRated() {
     <div>loading...</div>
   ) : (
     <Container>
-      <Title>Top Rated Movies</Title>
-      <Slider category="topRated" movies={topRatedMovies!.results} />
+      <Title>Popular Movies</Title>
+      <Slider category="popular" movies={popularMovies!.results} />
     </Container>
   );
 }
 
-export default TopRated;
+export default Popular;

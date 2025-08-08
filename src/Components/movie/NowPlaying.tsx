@@ -1,7 +1,7 @@
 import { useQuery } from "react-query";
 import { styled } from "styled-components";
-import { getNowPlayingMovies, MoviesResultWithDates } from "../api";
-import { makeImagePath } from "../utils";
+import { getNowPlayingMovies, MoviesResultWithDates } from "../../api";
+import { makeImagePath } from "../../utils";
 import Slider from "./Slider";
 
 const Container = styled.div`

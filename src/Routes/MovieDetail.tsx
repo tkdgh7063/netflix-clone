@@ -10,9 +10,9 @@ import {
   MovieDetail,
   PaginatedResult,
 } from "../api";
-import MovieModal from "../Components/MovieModal";
+import MovieModal from "../Components/movie/MovieModal";
 import ScrollToTop from "../Components/ScrollToTop";
-import Slider from "../Components/Slider";
+import Slider from "../Components/movie/Slider";
 import { makeImagePath } from "../utils";
 
 const Wrapper = styled.div`

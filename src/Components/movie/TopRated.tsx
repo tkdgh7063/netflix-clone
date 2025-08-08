@@ -1,11 +1,12 @@
 import { useQuery } from "react-query";
 import styled from "styled-components";
-import { getUpcomingMovies, MoviesResultWithDates } from "../api";
+import { getTopRatedMovies, Movie, PaginatedResult } from "../../api";
 import Slider from "./Slider";
 
 const Container = styled.div`
   height: 200px;
   position: relative;
+  margin-bottom: 110px;
 `;
 
 const Title = styled.div`
@@ -15,10 +16,10 @@ const Title = styled.div`
   font-weight: 600;
 `;
 
-function Upcoming() {
-  const { isLoading, data: upcomingMovies } = useQuery<MoviesResultWithDates>(
-    ["movies", "upcoming"],
-    getUpcomingMovies,
+function TopRated() {
+  const { isLoading, data: topRatedMovies } = useQuery<PaginatedResult<Movie>>(
+    ["movies", "topRated"],
+    getTopRatedMovies,
     { staleTime: Infinity }
   );
 
@@ -26,10 +27,10 @@ function Upcoming() {
     <div>loading...</div>
   ) : (
     <Container>
-      <Title>Upcoming Movies</Title>
-      <Slider category="upcoming" movies={upcomingMovies!.results} />
+      <Title>Top Rated Movies</Title>
+      <Slider category="topRated" movies={topRatedMovies!.results} />
     </Container>
   );
 }
 
-export default Upcoming;
+export default TopRated;

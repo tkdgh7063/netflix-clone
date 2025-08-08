@@ -7,8 +7,8 @@ import {
   getVideoByMovieId,
   MovieDetail,
   VideoSearchResult,
-} from "../api";
-import { getTrailerVideoUrl, makeImagePath, makeLayoutId } from "../utils";
+} from "../../api";
+import { getTrailerVideoUrl, makeImagePath, makeLayoutId } from "../../utils";
 
 const Overlay = styled(motion.div)`
   position: fixed;

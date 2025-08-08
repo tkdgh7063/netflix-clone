@@ -2,9 +2,9 @@ import { AnimatePresence, motion, Variants } from "motion/react";
 import { useState } from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { styled } from "styled-components";
-import { Movie } from "../api";
-import useWindowDimensions from "../useWindowDimensions";
-import { makeImagePath, makeLayoutId, OFFSET } from "../utils";
+import { Movie } from "../../api";
+import useWindowDimensions from "../../useWindowDimensions";
+import { makeImagePath, makeLayoutId, OFFSET } from "../../utils";
 
 const SliderContainer = styled.div`
   padding: 0px 60px;
