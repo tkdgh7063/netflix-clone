@@ -1,6 +1,7 @@
+import { AnimatePresence } from "motion/react";
 import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
-import { useParams } from "react-router-dom";
+import { useParams, useRouteMatch } from "react-router-dom";
 import styled from "styled-components";
 import {
   getMovieById,
@@ -9,6 +10,7 @@ import {
   MovieDetail,
   PaginatedResult,
 } from "../api";
+import MovieModal from "../Components/MovieModal";
 import ScrollToTop from "../Components/ScrollToTop";
 import Slider from "../Components/Slider";
 import { makeImagePath } from "../utils";
@@ -75,6 +77,10 @@ const Title = styled.div`
 
 function MovieDetailPage() {
   const { movieId } = useParams<{ movieId: string }>();
+  const similarMovieMatch = useRouteMatch<{
+    movieId: string;
+    similarMovieId: string;
+  }>("/movie/:movieId/detail/similar/:similarMovieId");
   const numericMovieId = Number(movieId);
 
   const { isLoading: movieLoading, data: movie } = useQuery<MovieDetail>({
@@ -161,6 +167,9 @@ function MovieDetailPage() {
             <Title>Similar Movies</Title>
             <Slider category="similar" movies={similar!.results} />
           </SimilarContainer>
+          <AnimatePresence>
+            {similarMovieMatch ? <MovieModal /> : null}
+          </AnimatePresence>
         </>
       )}
     </Wrapper>

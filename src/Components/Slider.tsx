@@ -1,6 +1,6 @@
 import { AnimatePresence, motion, Variants } from "motion/react";
 import { useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, useRouteMatch } from "react-router-dom";
 import { styled } from "styled-components";
 import { Movie } from "../api";
 import useWindowDimensions from "../useWindowDimensions";
@@ -133,6 +133,8 @@ const Slider = ({ category, movies }: SliderProps) => {
   const history = useHistory();
   const width = useWindowDimensions();
 
+  const similar = useRouteMatch<{ movieId: string }>("/movie/:movieId/detail");
+
   const [index, setIndex] = useState(0);
   const [isExiting, setIsExiting] = useState(false);
   const [direction, setDirection] = useState(0);
@@ -158,7 +160,11 @@ const Slider = ({ category, movies }: SliderProps) => {
   };
 
   const onMovieClick = (movieId: number) => {
-    history.push(`/movies/${category}/${movieId}`);
+    if (similar) {
+      history.push(
+        `/movie/${similar.params.movieId}/detail/similar/${movieId}`
+      );
+    } else history.push(`/movies/${category}/${movieId}`);
   };
 
   return (
@@ -188,7 +194,11 @@ const Slider = ({ category, movies }: SliderProps) => {
                 whileHover="hover"
                 onClick={() => onMovieClick(movie.id)}
                 $bgPhoto={
-                  movie.backdrop_path ? makeImagePath(movie.backdrop_path) : ""
+                  movie.backdrop_path
+                    ? makeImagePath(movie.backdrop_path)
+                    : movie.poster_path
+                    ? makeImagePath(movie.poster_path)
+                    : ""
                 }>
                 <MovieOverlay variants={overlayVariants} />
                 <MovieInfo variants={MovieInfoVariants}>
