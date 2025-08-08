@@ -2,9 +2,9 @@ import { AnimatePresence, motion, Variants } from "motion/react";
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
-import { Movie, PaginatedResult } from "../api";
-import useWindowDimensions from "../useWindowDimensions";
-import { makeImagePath, OFFSET } from "../utils";
+import { Movie, PaginatedResult } from "../../api";
+import useWindowDimensions from "../../useWindowDimensions";
+import { makeImagePath, OFFSET } from "../../utils";
 
 const Container = styled.div`
   height: 200px;
