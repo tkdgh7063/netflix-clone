@@ -17,7 +17,7 @@ function App() {
           ]}>
           <MovieDetailPage />
         </Route>
-        <Route path="/tv">
+        <Route exact path={["/tv", "/tv/:category/:tvId"]}>
           <Tv />
         </Route>
         <Route path="/search">

@@ -301,3 +301,16 @@ export async function getOntheAirTv() {
   );
   return await res.json();
 }
+
+export async function getTvByTvId(tvId: number) {
+  const res = await fetch(`${BASE_URL}/tv/${tvId}?language=en-US`, options);
+  return await res.json();
+}
+
+export async function getVideoByTvId(tvId: number) {
+  const res = await fetch(
+    `${BASE_URL}/tv/${tvId}/videos?language=en-US`,
+    options
+  );
+  return await res.json();
+}
