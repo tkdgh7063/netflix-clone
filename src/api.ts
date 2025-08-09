@@ -77,7 +77,52 @@ export interface TV extends BaseMedia {
   origin_country: string[];
 }
 
-export interface TVDetail extends Omit<TV, "genre_ids"> {}
+export interface TVDetail extends Omit<TV, "genre_ids"> {
+  episode_run_time: number[];
+  genres: Genre[];
+  homepage: string;
+  languages: string[];
+  last_air_date: string;
+  next_episode_to_air: string;
+  number_of_episodes: number;
+  number_of_seasons: number;
+  spoken_languages: SpokenLanguage[];
+  type: string;
+  tagline: string;
+  production_companies: ProductionCompany[];
+  production_countries: ProductionCountry[];
+  created_by: Creator;
+  last_episode_to_air: last_episode;
+  networks: Network;
+  seasons: Season[];
+}
+
+interface Season {
+  air_date: string;
+  episode_counter: number;
+  id: number;
+  name: string;
+  overview: string;
+  poster_path: string;
+  season_number: number;
+  vote_average: number;
+}
+
+interface last_episode {
+  // last_episode_to_air
+  id: number;
+  name: string;
+  overview: string;
+  air_date: string;
+  episode_number: number;
+  production_code: string;
+  runtime: number;
+  season_number: number;
+  show_id: number;
+  still_path: string;
+  vote_average: number;
+  vote_count: number;
+}
 
 export interface Person {
   adult: boolean;
@@ -95,6 +140,22 @@ interface KnownForMedia extends Omit<Movie, "title" | "release_date"> {
   media_type: "movie" | "tv";
   title?: string;
   release_date?: string;
+}
+
+type Creator = Pick<Person, "id" | "name" | "gender" | "profile_path"> & {
+  credit_id: string;
+};
+
+interface Network {
+  id: number;
+  logo_path: string;
+  name: string;
+  origin_country: string;
+}
+
+interface NetworkDetail extends Network {
+  headquarters: string;
+  homepage: string;
 }
 
 export interface PaginatedResult<T> {
@@ -206,5 +267,37 @@ export async function getVideoByMovieId(movieId: number) {
 
 export async function getSimilarByMovieId(movieId: number) {
   const res = await fetch(`${BASE_URL}/movie/${movieId}/similar`, options);
+  return await res.json();
+}
+
+export async function getAiringToday() {
+  const res = await fetch(
+    `${BASE_URL}/tv/airing_today?language=en-US&page=1`,
+    options
+  );
+  return await res.json();
+}
+
+export async function getPopularTv() {
+  const res = await fetch(
+    `${BASE_URL}/tv/popular?language=en-US&page=1`,
+    options
+  );
+  return await res.json();
+}
+
+export async function getTopRatedTv() {
+  const res = await fetch(
+    `${BASE_URL}/tv/top_rated?language=en-US&page=1`,
+    options
+  );
+  return await res.json();
+}
+
+export async function getOntheAirTv() {
+  const res = await fetch(
+    `${BASE_URL}/tv/on_the_air?language=en-US&page=1`,
+    options
+  );
   return await res.json();
 }
