@@ -1,5 +1,7 @@
+import Airing from "../Components/tv/Airing";
+
 function Tv() {
-  return <h1>TV</h1>;
+  return <Airing />;
 }
 
 export default Tv;
