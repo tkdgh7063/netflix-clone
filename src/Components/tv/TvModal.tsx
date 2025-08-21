@@ -3,7 +3,7 @@ import { useQuery } from "react-query";
 import { Link, useHistory, useRouteMatch } from "react-router-dom";
 import { styled } from "styled-components";
 import {
-  getTvByTvId,
+  getTvById,
   getVideoByTvId,
   TVDetail,
   VideoSearchResult,
@@ -91,7 +91,7 @@ function TvModal() {
   const numericTvId = Number(tvId);
   const { isLoading: tvLoading, data: tv } = useQuery<TVDetail>({
     queryKey: ["tv", tvId],
-    queryFn: () => getTvByTvId(numericTvId!),
+    queryFn: () => getTvById(numericTvId!),
     enabled: numericTvId !== undefined && !Number.isNaN(numericTvId),
     staleTime: Infinity,
   });

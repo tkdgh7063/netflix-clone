@@ -6,9 +6,10 @@ function ScrollToTop() {
 
   useEffect(() => {
     const isDetailPageOnly = matchPath(pathname, {
-      path: "/movie/:movieId/detail",
+      path: ["/movie/:movieId/detail", "/tv/:tvId/detail"],
       exact: true,
     });
+
     if (isDetailPageOnly) {
       window.scrollTo({ top: 0, behavior: "auto" });
     }

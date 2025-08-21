@@ -302,7 +302,7 @@ export async function getOntheAirTv() {
   return await res.json();
 }
 
-export async function getTvByTvId(tvId: number) {
+export async function getTvById(tvId: number) {
   const res = await fetch(`${BASE_URL}/tv/${tvId}?language=en-US`, options);
   return await res.json();
 }
@@ -312,5 +312,10 @@ export async function getVideoByTvId(tvId: number) {
     `${BASE_URL}/tv/${tvId}/videos?language=en-US`,
     options
   );
+  return await res.json();
+}
+
+export async function getSimilarByTvId(tvId: number) {
+  const res = await fetch(`${BASE_URL}/tv/${tvId}/similar`, options);
   return await res.json();
 }

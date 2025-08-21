@@ -4,6 +4,7 @@ import Home from "./Routes/Home";
 import MovieDetailPage from "./Routes/MovieDetail";
 import Search from "./Routes/Search";
 import Tv from "./Routes/Tv";
+import TvDetailPage from "./Routes/TvDetail";
 
 function App() {
   return (
@@ -16,6 +17,10 @@ function App() {
             "/movie/:movieId/detail/similar/:similarMovieId",
           ]}>
           <MovieDetailPage />
+        </Route>
+        <Route
+          path={["/tv/:tvId/detail", "/tv/:tvId/detail/similar/:similarTvId"]}>
+          <TvDetailPage />
         </Route>
         <Route exact path={["/tv", "/tv/:category/:tvId"]}>
           <Tv />
